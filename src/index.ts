@@ -8,6 +8,7 @@ import { createConnection , getConnection } from 'typeorm';
 import 'reflect-metadata'
 import bodyParser from 'body-parser';
 import useRouter from './routes/user.route';
+import statsRouter from './routes/stats.route';
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -26,6 +27,7 @@ app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json())
 
 app.use('/api/user' , useRouter);
+app.use('/api/stats' , statsRouter)
 
 app.get('/' , (req : Request , res : Response) => {
     res.send('<h1>IOT PROJECT API is online</h1>');
