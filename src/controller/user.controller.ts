@@ -25,8 +25,9 @@ export const createUser = async (req: Request, res: Response) => {
     if(existingUser){
         return res.status(400).json({ message: 'User already exists' });
     }
-
-    const user = new User(email , username , hashedPassword);
+    const usersNumber = await userRepository.count();
+    let id : number = usersNumber + 1;
+    const user = new User(id , email , username , hashedPassword);
     
     await userRepository.save(user);
     return res.status(201).json({ message: 'User registered successfully' });
