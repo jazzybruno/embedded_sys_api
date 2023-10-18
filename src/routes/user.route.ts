@@ -11,21 +11,21 @@ useRouter.get('/auth/user' , Auth , getAuthenticatedUser);
 
 useRouter.get('/:id' , Auth , getUserById);
 
-useRouter.get('/email/:email' , getUserByEmail);
+useRouter.get('/email/:email' , Auth , getUserByEmail);
 
-useRouter.post('/' , [
+useRouter.post('/create' , [
     check('email').isEmail(),
     check('username').isLength({min:5}),
     check('password').isLength({min:5})
 ] , createUser);
 
-useRouter.put('/:id' , Auth , [
+useRouter.patch('/update/:id' , Auth , [
     check('email').isEmail(),
     check('username').isLength({min:5}),
     check('password').isLength({min:5})
 ] , updateUser);
 
-useRouter.delete('/:id' , Auth , deleteUser);
+useRouter.delete('/delete/:id' , Auth , deleteUser);
 
 useRouter.post('/login' , [
     check('email').isEmail(),

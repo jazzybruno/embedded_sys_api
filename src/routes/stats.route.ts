@@ -11,18 +11,16 @@ statsRouter.get('/id/:id' , Auth , getStatsById);
 
 statsRouter.get('/user' , Auth , getStatsByUserId);
 
-statsRouter.post('/create' , [
+statsRouter.post('/create' , Auth , [
     check('body_temperature').isNumeric(),
     check('blood_pressure').isNumeric(),
     check('heart_rate').isNumeric(),
-    check('date').isDate()
 ] , createStats);
 
 statsRouter.put('update/:id' , Auth , [
     check('body_temperature').isNumeric(),
     check('blood_pressure').isNumeric(),
     check('heart_rate').isNumeric(),
-    check('date').isDate()
 ] , updateStats);
 
 statsRouter.delete('delete/:id' , Auth , deleteStats);

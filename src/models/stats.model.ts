@@ -1,8 +1,8 @@
-import { Entity , PrimaryGeneratedColumn , Column, ManyToOne } from "typeorm";
+import { Entity , PrimaryGeneratedColumn , BaseEntity , Column, ManyToOne } from "typeorm";
 import { User } from "./User.model";
 
 @Entity()
-export class Stats {
+export class Stats extends BaseEntity {
     @PrimaryGeneratedColumn()
     id : number;
 
@@ -15,13 +15,14 @@ export class Stats {
     @Column()
     heart_rate : number;
 
-    @ManyToOne(User => User)
+    @ManyToOne(() => User)
     user : User;
 
     @Column()
     date : Date;
 
     constructor(id : number , body_temperature : number , blood_pressure : number , heart_rate : number , user : User , date : Date){
+        super()
         this.id = id;
         this.body_temperature = body_temperature;
         this.blood_pressure = blood_pressure;

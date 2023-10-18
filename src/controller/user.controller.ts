@@ -5,6 +5,7 @@ import { User } from '../models/User.model';
 import { createConnection , getConnection } from 'typeorm';
 import 'reflect-metadata'
 import { Response , Request } from 'express';
+import { parse } from 'path';
 
 export const createUser = async (req: Request, res: Response) => {
     const {email , username , password} = req.body;
@@ -101,17 +102,17 @@ export const updateUser = async (req: Request, res: Response) => {
 export const deleteUser = async (req: Request, res: Response) => {
     const userInside = req.body.user;
     const userRepository = getConnection().getRepository(User);
-    const email = req.params.email;
-    if(!email){
+    const id = req.params.id;
+    if(!id){
         return res.status(400).json({ message: 'Missing required fields' });
     }
 
-    if(userInside.email !== email){
+    if(userInside.userId !== parseInt(id)){
         return res.status(400).json({ message: 'You are not authorized to delete this user' });
     }
     const user = await userRepository.findOne({
         where:{
-            email : email
+           id : parseInt(id)
         }
     })
 

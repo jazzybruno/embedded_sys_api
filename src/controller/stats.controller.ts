@@ -2,9 +2,9 @@ import { Request, Response } from 'express';
 import {Stats} from '../models/stats.model';
 import { createConnection, getConnection, getRepository } from 'typeorm';
 
-export const createStats = (req : Request , res : Response) => {
-  const { body_temperature , blood_pressure , heart_rate, date } = req.body;
-  if(!body_temperature || !blood_pressure || !heart_rate || !date){
+export const createStats = async(req : Request , res : Response) => {
+  const { body_temperature , blood_pressure , heart_rate, } = req.body;
+  if(!body_temperature || !blood_pressure || !heart_rate){
     return res.status(400).json({ message: 'Missing required fields' });
   }
 
@@ -12,20 +12,23 @@ export const createStats = (req : Request , res : Response) => {
   if(!user){
     return res.status(400).json({ message: 'Missing required fields' });
     }
-
-    const stats = new Stats(0 , body_temperature , blood_pressure , heart_rate , user , date);
     const statsRepository = getConnection().getRepository(Stats);
+    const statsNumber = await statsRepository.count();
+    let id : number = statsNumber + 1;
+    const date = new Date();
+    const stats = new Stats(id , body_temperature , blood_pressure , heart_rate , user , date);
+    
     statsRepository.save(stats);
     return res.status(201).json({ message: 'Stats created successfully' , data : stats });
 }
 
-export const getAllStats = (res: Response , req : Request ) => {
+export const getAllStats = ( req : Request ,res: Response ) => {
    const statsRepository = getConnection().getRepository(Stats);
     const stats = statsRepository.find();
     return res.status(200).json({ message: 'Stats fetched successfully' , data : stats });
 }
 
-export const getStatsById = (res : Response , req : Request) => {
+export const getStatsById = (req : Request , res : Response) => {
    const statsRepository = getConnection().getRepository(Stats);
     const id = req.params.id;
     if(!id){
@@ -39,7 +42,7 @@ export const getStatsById = (res : Response , req : Request) => {
     return res.status(200).json({ message: 'Stats fetched successfully' , data : stats });
 }
 
-export const getStatsByUserId = (res: Response , req : Request) => {
+export const getStatsByUserId = (req : Request , res: Response) => {
   const statsRepository = getConnection().getRepository(Stats);
     const user = req.body.user;
     if(!user){
@@ -53,7 +56,7 @@ export const getStatsByUserId = (res: Response , req : Request) => {
     return res.status(200).json({ message: 'Stats fetched successfully' , data : stats });
 }
 
-export const updateStats = async(res : Response , req : Request) => {
+export const updateStats = async( req : Request ,  res : Response) => {
     const { body_temperature , blood_pressure , heart_rate, date } = req.body;
     if(!body_temperature || !blood_pressure || !heart_rate || !date){
         return res.status(400).json({ message: 'Missing required fields' });
