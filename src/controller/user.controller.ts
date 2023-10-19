@@ -11,10 +11,7 @@ export const createUser = async (req: Request, res: Response) => {
     const {email , username , password} = req.body;
 
     if (!email || !username || !password) {
-        return res.render('register' , {
-            message : 'Missing required fields'
-        } )
-        // return res.status(400).json({ message: 'Missing required fields' });
+        return res.status(400).json({ message: 'Missing required fields' });
       }
 
     const hashedPassword = await bcrypt.hash(password , 10);
@@ -27,20 +24,14 @@ export const createUser = async (req: Request, res: Response) => {
     })
 
     if(existingUser){
-        return res.render('register' , {
-            message : 'User Already Exists'
-        } )
-        // return res.status(400).json({ message: 'User already exists' });
+        return res.status(400).json({ message: 'User already exists' });
     }
     const usersNumber = await userRepository.count();
     let id : number = usersNumber + 1;
     const user = new User(id , email , username , hashedPassword);
     
     await userRepository.save(user);
-    return res.render('register' , {
-        success : 'User registered successfully'
-    } )
-    // return res.status(201).json({ message: 'User registered successfully' });
+    return res.status(201).json({ message: 'User registered successfully' });
 
 };
 
@@ -148,18 +139,12 @@ export const login = async (req: Request, res: Response) => {
     })
 
     if(!user){
-        return res.render('login' , {
-            message : 'Incorrect email or password'
-        } )
-        // res.status(400).json({ message: 'Incorrect email or password' });
+        return res.status(400).json({ message: 'Incorrect email or password' });
     }
 
     const isPasswordValid = await bcrypt.compare(password , user.password);
     if(!isPasswordValid){
-        return res.render('login' , {
-            message : 'Incorrect email or password'
-        } )
-        // return res.status(400).json({ message: 'Incorrect email or password' });
+        return res.status(400).json({ message: 'Incorrect email or password' });
     }
 
     const token = jwt.sign({
@@ -168,10 +153,7 @@ export const login = async (req: Request, res: Response) => {
         email : user.email
     } , process.env.TOKEN_KEY||'secret that can come in backeup just in case' , {expiresIn : '1h'});
 
-    return res.render('login' , {
-        success : 'Logged in successfully'
-    } )
-    // return res.status(200).json({ message: 'Logged in successfully' , token : token });
+    return res.status(200).json({ message: 'Logged in successfully' , token : token });
 
 }
 

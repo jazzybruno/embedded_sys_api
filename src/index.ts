@@ -24,26 +24,6 @@ cors({
     origin: 'localhost:3000'
 }))
 
-// The views Rendering Engine
-const publicDir = path.join(__dirname, '../public');
-
-app.use(express.static(publicDir));
-
-// the views routes 
-app.get('/dashboard' ,  (req , res) => {
-    res.render('index')
-})
-
-app.get('/login' , (req , res)=>{
-    res.render('login')
-})
-
-app.get('/register' , (req , res)=>{
-    res.render('register')
-})
-
-
-app.set('view engine', 'hbs');
 
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json())
