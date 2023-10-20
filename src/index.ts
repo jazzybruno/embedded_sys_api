@@ -21,7 +21,7 @@ const DBSOURCE = "usersdb.sql";
 
 app.use(express.urlencoded(),
 cors({
-    origin: 'localhost:3000'
+    origin: '*'
 }))
 
 
