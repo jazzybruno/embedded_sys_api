@@ -1,5 +1,6 @@
 import { Request, Response } from 'express';
 import {Stats} from '../models/stats.model';
+import {User} from '../models/User.model';
 import { createConnection, getConnection, getRepository } from 'typeorm';
 
 export const createStats = async(req : Request , res : Response) => {
@@ -42,15 +43,19 @@ export const getStatsById = (req : Request , res : Response) => {
     return res.status(200).json({ message: 'Stats fetched successfully' , data : stats });
 }
 
-export const getStatsByUserId = (req : Request , res: Response) => {
+export const getStatsByUserId = async (req : Request , res: Response) => {
   const statsRepository = getConnection().getRepository(Stats);
+  const userRepository = getConnection().getRepository(User);
     const user = req.body.user;
     if(!user){
         return res.status(400).json({ message: 'Missing required fields' });
     }
-    const stats = statsRepository.findOne({
+    
+    const stats = await statsRepository.find({
         where:{
-            user : user
+            user : {
+                id : user.userId
+            }
         }
     });
     return res.status(200).json({ message: 'Stats fetched successfully' , data : stats });
